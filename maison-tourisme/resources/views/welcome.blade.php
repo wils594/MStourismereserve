@@ -34,6 +34,7 @@
         .hero-wrapper {
             width: 100%;
             max-width: 1120px;
+            perspective: 1400px; /* profondeur 3D */
         }
 
         .hero-card {
@@ -48,6 +49,21 @@
                 0 22px 55px rgba(15, 23, 42, 0.18),
                 0 0 0 1px rgba(15, 23, 42, 0.04);
             overflow: hidden;
+            transform-style: preserve-3d;      /* active la 3D interne */
+            transform-origin: center center;
+            transition: transform 0.25s ease-out,
+                        box-shadow 0.25s ease-out;
+        }
+
+        /* léger soulèvement par défaut */
+        .hero-card.initial-tilt {
+            transform: rotateX(4deg) rotateY(-5deg) translateY(-4px);
+        }
+
+        .hero-card.hovered {
+            box-shadow:
+                0 30px 70px rgba(15, 23, 42, 0.30),
+                0 0 0 1px rgba(15, 23, 42, 0.06);
         }
 
         /* Décor de fond */
@@ -61,6 +77,7 @@
             top: -60px;
             right: -80px;
             pointer-events: none;
+            transform: translateZ(-40px);
         }
 
         .hero-card::after {
@@ -73,6 +90,7 @@
             bottom: -80px;
             left: -60px;
             pointer-events: none;
+            transform: translateZ(-50px);
         }
 
         /* Colonne texte (gauche) */
@@ -84,6 +102,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            transform: translateZ(40px); /* le texte ressort légèrement */
         }
 
         .hero-pill {
@@ -99,6 +118,7 @@
             background: #eff6ff;
             border: 1px solid #bfdbfe;
             margin-bottom: 1rem;
+            transform: translateZ(55px);
         }
 
         .hero-pill-dot {
@@ -141,6 +161,7 @@
             border-radius: 999px;
             border: 1px dashed #e5e7eb;
             background: #f9fafb;
+            transform: translateZ(50px);
         }
 
         .btn-row {
@@ -164,6 +185,7 @@
             transition: all 0.18s ease-in-out;
             min-width: 150px;
             white-space: nowrap;
+            transform: translateZ(60px);
         }
 
         .btn-primary {
@@ -176,7 +198,7 @@
         }
 
         .btn-primary:hover {
-            transform: translateY(-1px) scale(1.01);
+            transform: translateZ(70px) translateY(-1px) scale(1.01);
             box-shadow:
                 0 18px 40px rgba(251, 191, 36, 0.7),
                 0 0 0 1px rgba(251, 191, 36, 0.95);
@@ -192,11 +214,13 @@
             background: #eff6ff;
             border-color: #60a5fa;
             color: #1e40af;
+            transform: translateZ(70px) translateY(-1px);
         }
 
         .hero-note {
             font-size: 0.78rem;
             color: #9ca3af;
+            transform: translateZ(35px);
         }
 
         /* Colonne image (droite) – détachée */
@@ -208,6 +232,7 @@
             align-items: center;
             justify-content: center;
             z-index: 1;
+            transform: translateZ(30px);
         }
 
         /* carte flottante derrière l'image */
@@ -222,7 +247,7 @@
             background: linear-gradient(145deg, #eff6ff, #fee2e2);
             opacity: 0.9;
             box-shadow: 0 18px 45px rgba(15, 23, 42, 0.25);
-            transform: translate(10px, 10px);
+            transform: translate(14px, 16px) translateZ(10px);
         }
 
         .media-frame {
@@ -236,6 +261,7 @@
             box-shadow:
                 0 18px 45px rgba(15, 23, 42, 0.55),
                 0 0 0 1px rgba(15, 23, 42, 0.45);
+            transform: translateZ(70px);
         }
 
         .media-gradient-ring {
@@ -315,7 +341,7 @@
                 flex-direction: column;
             }
 
-            /* sur mobile : image en haut, texte en bas pour un meilleur impact */
+            /* sur mobile : image en haut, texte en bas */
             .hero-media {
                 order: -1;
                 max-width: 100%;
@@ -362,7 +388,7 @@
 <body>
 
 <div class="hero-wrapper">
-    <div class="hero-card">
+    <div class="hero-card initial-tilt">
 
         {{-- Colonne texte gauche --}}
         <div class="hero-content">
@@ -373,7 +399,7 @@
 
             <h1 class="hero-title">
                 Explorez, réservez et vivez
-                <span class="hero-highlight">le Togo autrement.</span>
+                <span class="hero-highlight">Aného autrement.</span>
             </h1>
 
             <p class="hero-subtitle">
@@ -416,19 +442,51 @@
             <div class="media-frame">
                 <div class="slider">
                     <img src="{{ asset('images/ge1.png') }}" alt="Site touristique 1">
-                    <img src="{{ asset('images/fs.jpg') }}" alt="Site touristique 2">
-                    <img src="{{ asset('images/ms.jpg') }}" alt="Site touristique 3">
-                    <img src="{{ asset('images/aq.jpg') }}" alt="Site touristique 4">
+                    <img src="{{ asset('images/ge2.jpg') }}" alt="Site touristique 2">
+                    <img src="{{ asset('images/ge3.jpg') }}" alt="Site touristique 3">
+                    <img src="{{ asset('images/ge4.jpg') }}" alt="Site touristique 4">
                 </div>
                 <div class="media-gradient-ring"></div>
                 <div class="media-tag">
-                    Découvertes au Togo
+                    Découvertes à Aného
                 </div>
             </div>
         </div>
 
     </div>
 </div>
+
+<script>
+    // Effet 3D interactif au mouvement de la souris
+    (function () {
+        const card = document.querySelector('.hero-card');
+        if (!card) return;
+
+        const maxRotate = 10; // degrés max
+
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const rotateY = ((x - rect.width / 2) / rect.width) * (maxRotate * 2);
+            const rotateX = -((y - rect.height / 2) / rect.height) * (maxRotate * 2);
+
+            card.classList.add('hovered');
+            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.classList.remove('hovered');
+            card.style.transform = '';
+            card.classList.add('initial-tilt');
+        });
+
+        card.addEventListener('mouseenter', () => {
+            card.classList.remove('initial-tilt');
+        });
+    })();
+</script>
 
 </body>
 </html>

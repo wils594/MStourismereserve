@@ -24,11 +24,22 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        // Authentification via LoginRequest (Breeze)
         $request->authenticate();
 
+        // Regénération de la session
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // On récupère l'utilisateur connecté
+        $user = $request->user(); // équivalent à Auth::user()
+
+        //  Si c'est un admin → tableau de bord admin
+        if ($user && $user->role === 'admin') {
+            return redirect()->intended(route('admin.dashboard', absolute: false));
+        }
+
+        //  Sinon (user normal) → page accueil
+        return redirect()->intended(route('accueil', absolute: false));
     }
 
     /**

@@ -1,27 +1,36 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\DashboardController; //  à adapter si ton contrôleur est dans un namespace Admin
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use Illuminate\Support\Facades\Route;
 
+// Page d'accueil publique (avant connexion)
 Route::get('/', function () {
     return view('welcome');
+})->name('home');
+
+// Pages pour utilisateurs connectés
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/accueil', function () {
+        return view('accueil');
+    })->name('accueil');
+
+    Route::get('/espace-client', function () {
+        return view('user.dashboard');
+    })->name('user.dashboard');
+
+    Route::get('/dashboard', function () {
+        return redirect()->route('accueil');
+    })->name('dashboard');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+// Admin seulement
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['auth', 'is_admin'])
+    ->group(function () {
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+            ->name('dashboard');
+    });
 
 require __DIR__.'/auth.php';
-
-// Routes admin (backoffice)
-Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->name('admin.dashboard');
-});

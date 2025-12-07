@@ -10,8 +10,8 @@ class IsAdmin
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check() || !auth()->user()->is_admin) {
-            // Pas admin → retour vers accueil ou 403
+        // Si pas connecté OU pas admin → accès refusé
+        if (!auth()->check() || auth()->user()->role !== 'admin') {
             abort(403, 'Accès refusé.');
         }
 
