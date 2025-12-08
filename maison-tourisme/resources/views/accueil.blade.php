@@ -2,27 +2,19 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Espace client – Maison du Tourisme</title>
+    <title>Accueil – Maison du Tourisme</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <style>
-        /* RESET SIMPLE */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: radial-gradient(circle at top, #e0f2fe, #f9fafb, #eef2ff);
-            color: #0f172a;
+            background: radial-gradient(circle at top, #e0f2fe, #f9fafb);
             min-height: 100vh;
         }
 
-        a {
-            text-decoration: none;
-        }
+        a { text-decoration: none; }
 
         /* NAVBAR */
         .mt-nav {
@@ -33,7 +25,7 @@
         }
 
         .mt-nav-inner {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 0 1.5rem;
             display: flex;
@@ -42,7 +34,6 @@
             gap: 1.5rem;
         }
 
-        /* Logo */
         .mt-nav-logo {
             display: flex;
             align-items: center;
@@ -50,17 +41,16 @@
         }
 
         .mt-logo-circle {
-            width: 38px;
-            height: 38px;
+            width: 36px;
+            height: 36px;
             border-radius: 999px;
             background: linear-gradient(135deg, #facc15, #f97316);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #111827;
-            box-shadow: 0 5px 15px rgba(249, 115, 22, 0.5);
         }
 
         .mt-logo-text {
@@ -70,7 +60,7 @@
 
         .mt-logo-title {
             color: #e5e7eb;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 700;
         }
 
@@ -79,10 +69,9 @@
             font-size: 0.7rem;
         }
 
-        /* Liens navigation */
         .mt-nav-links {
             display: flex;
-            gap: 1.3rem;
+            gap: 1.2rem;
             flex: 1;
             justify-content: center;
         }
@@ -100,7 +89,6 @@
             border-bottom-color: #facc15;
         }
 
-        /* Zone utilisateur */
         .mt-nav-user {
             display: flex;
             align-items: center;
@@ -116,7 +104,6 @@
             border: 1px solid rgba(148, 163, 184, 0.7);
         }
 
-        /* AJOUT : bouton Mon tableau de bord */
         .mt-dashboard-btn {
             background: linear-gradient(90deg, #4f46e5, #0ea5e9);
             padding: 0.4rem 1rem;
@@ -126,156 +113,188 @@
             color: #f9fafb;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 5px 16px rgba(14, 165, 233, 0.4);
-            transition: 0.18s ease;
-        }
-
-        .mt-dashboard-btn:hover {
-            filter: brightness(1.05);
-            transform: translateY(-1px);
         }
 
         .mt-logout-btn {
-            background: linear-gradient(90deg, #f97316, #facc15);
-            padding: 0.4rem 0.95rem;
+            background: #e5e7eb;
+            padding: 0.4rem 0.9rem;
             border-radius: 999px;
             border: none;
             font-size: 0.78rem;
-            font-weight: 700;
             color: #111827;
+            font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 5px 16px rgba(249, 115, 22, 0.5);
-            transition: 0.18s ease;
         }
 
+        .mt-dashboard-btn:hover,
         .mt-logout-btn:hover {
             filter: brightness(1.05);
-            transform: translateY(-1px);
         }
 
-        /* Layout page */
-        .page-wrapper {
-            max-width: 1200px;
+        /* CONTENU ACCUEIL */
+        .accueil-wrapper {
+            max-width: 1100px;
             margin: 0 auto;
             padding: 1.8rem 1.5rem 2.5rem;
         }
 
-        /* Header principal (ton espace client) */
-        .main-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1.5rem;
-            padding: 1.6rem 1.8rem;
+        .accueil-card {
+            background: #ffffff;
             border-radius: 1.4rem;
-            background: radial-gradient(circle at top left, #e0f2fe, #fef9c3);
-            border: 1px solid rgba(148, 163, 184, 0.5);
-            box-shadow:
-                0 18px 40px rgba(15, 23, 42, 0.18),
-                0 0 0 1px rgba(148, 163, 184, 0.18);
-            margin-bottom: 1.8rem;
+            padding: 1.8rem 1.6rem;
+            box-shadow: 0 18px 40px rgba(15,23,42,0.18);
+            border: 1px solid rgba(148,163,184,0.45);
+            margin-bottom: 2rem;
         }
 
-        .main-title {
+        .accueil-title {
             font-size: 1.4rem;
             font-weight: 700;
+            margin-bottom: .4rem;
             color: #0f172a;
-            letter-spacing: 0.01em;
         }
 
-        .main-subtitle {
-            margin-top: 0.35rem;
-            font-size: 0.9rem;
+        .accueil-subtitle {
+            font-size: .9rem;
             color: #475569;
+            margin-bottom: 1.4rem;
         }
 
-        .main-header-right {
+        .accueil-buttons {
             display: flex;
-            align-items: center;
-            gap: 0.75rem;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
         }
 
-        .badge-sejour {
-            font-size: 0.75rem;
-            padding: 0.35rem 0.7rem;
+        .btn-main {
             border-radius: 999px;
-            background: rgba(15, 118, 110, 0.08);
-            color: #065f46;
-            border: 1px solid rgba(16, 185, 129, 0.4);
-        }
-
-        /* Cartes d’actions */
-        .actions-grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 1.4rem;
-            margin-top: 1.2rem;
-        }
-
-        .action-card {
-            background: #ffffff;
-            border-radius: 1.1rem;
-            padding: 1.2rem 1.3rem;
-            border: 1px solid rgba(148, 163, 184, 0.35);
-            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
-            transition: 0.2s ease;
-            cursor: pointer;
-        }
-
-        .action-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
-        }
-
-        .action-title {
-            font-size: 0.95rem;
+            border: none;
+            padding: 0.6rem 1.4rem;
+            font-size: 0.9rem;
             font-weight: 600;
-            margin-bottom: 0.4rem;
-            color: #0f172a;
+            cursor: pointer;
+            transition: .18s ease;
         }
 
-        .action-text {
-            font-size: 0.8rem;
-            color: #64748b;
+        .btn-dashboard {
+            background: linear-gradient(90deg, #4f46e5, #0ea5e9);
+            color: #f9fafb;
+            box-shadow: 0 12px 28px rgba(59,130,246,0.45);
+        }
+
+        .btn-dashboard:hover {
+            filter: brightness(1.05);
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        /* SECTION SITES PUBLIÉS */
+        .sites-section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0f172a;
             margin-bottom: 0.6rem;
         }
 
-        .action-link {
-            font-size: 0.78rem;
-            color: #2563eb;
+        .sites-section-sub {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 1.2rem;
         }
 
-        /* Responsive */
-        @media (max-width: 900px) {
+        .sites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.4rem;
+        }
+
+        .site-card {
+            background: #ffffff;
+            border-radius: 1.1rem;
+            padding: 1rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 6px 18px rgba(15,23,42,0.12);
+        }
+
+        .site-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 0.8rem;
+            margin-bottom: .7rem;
+        }
+
+        .site-title {
+            font-size: 0.98rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.2rem;
+        }
+
+        .site-city {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 0.4rem;
+        }
+
+        .site-desc {
+            font-size: 0.8rem;
+            color: #475569;
+            margin-bottom: 0.7rem;
+        }
+
+        .site-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-reserver {
+            border-radius: 999px;
+            padding: 0.45rem 1rem;
+            border: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: #0ea5e9;
+            color: #f9fafb;
+            cursor: pointer;
+        }
+
+        .btn-reserver:hover {
+            background: #0284c7;
+        }
+
+        .site-tag {
+            font-size: 0.7rem;
+            color: #16a34a;
+            background: #dcfce7;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+        }
+
+        @media (max-width: 800px) {
             .mt-nav-inner {
                 flex-wrap: wrap;
                 justify-content: center;
             }
-
             .mt-nav-links {
                 flex-wrap: wrap;
                 justify-content: center;
             }
-
-            .page-wrapper {
+            .accueil-wrapper {
                 padding-inline: 1rem;
-            }
-
-            .main-header {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 1.3rem 1.2rem;
-            }
-
-            .actions-grid {
-                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
 
-    {{-- NAVBAR UTILISATEUR --}}
+    {{-- NAVBAR --}}
     <nav class="mt-nav">
         <div class="mt-nav-inner">
 
@@ -289,89 +308,105 @@
 
             <div class="mt-nav-links">
                 <a href="{{ url('/') }}" class="mt-link">Maison</a>
-                <a href="#a-propos" class="mt-link">À propos</a>
-                <a href="#reservation" class="mt-link">Réservation de site</a>
+                <a href="#sites" class="mt-link">Réserver un site</a>
                 <a href="#contact" class="mt-link">Contact</a>
-                <a href="#assistance" class="mt-link">Assistance</a>
             </div>
 
             <div class="mt-nav-user">
-
-                {{-- Nom utilisateur --}}
                 <span class="mt-user-name">
                     {{ auth()->user()->name ?? 'Utilisateur' }}
                 </span>
 
-                {{-- AJOUT : bouton Mon tableau de bord --}}
                 <a href="{{ route('user.dashboard') }}">
-                    <button class="mt-dashboard-btn">
+                    <button type="button" class="mt-dashboard-btn">
                         Mon tableau de bord
                     </button>
                 </a>
 
-                {{-- Déconnexion --}}
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="mt-logout-btn">
                         Déconnexion
                     </button>
                 </form>
-
             </div>
 
         </div>
     </nav>
 
-    {{-- CONTENU PRINCIPAL --}}
-    <div class="page-wrapper">
+    {{-- CONTENU ACCUEIL --}}
+    <div class="accueil-wrapper">
 
-        <div class="main-header">
-            <div>
-                <div class="main-title">
-                    Bonjour, {{ auth()->user()->name ?? 'Utilisateur' }} 👋
-                </div>
-                <div class="main-subtitle">
-                    Bienvenue dans votre espace client de la Maison du Tourisme.
-                    Ici, vous pouvez découvrir les sites disponibles, préparer vos visites
-                    et suivre vos réservations avant votre arrivée.
-                </div>
+        <div class="accueil-card">
+            <div class="accueil-title">
+                Bonjour, {{ auth()->user()->name ?? 'Utilisateur' }} 
+            </div>
+            <div class="accueil-subtitle">
+                Bienvenue sur la Maison du Tourisme. Depuis ici, vous pouvez découvrir les sites publiés,
+                préparer vos visites et gérer vos réservations avant votre arrivée.
             </div>
 
-            <div class="main-header-right">
-                <div class="badge-sejour">
-                    Préparez votre séjour en quelques clics
-                </div>
+            <div class="accueil-buttons">
+                <a href="#sites">
+                    <button type="button" class="btn-main btn-dashboard">
+                        Voir les sites disponibles
+                    </button>
+                </a>
+
+                <a href="{{ route('user.dashboard') }}">
+                    <button type="button" class="btn-main btn-secondary">
+                        Accéder à mon tableau de bord
+                    </button>
+                </a>
             </div>
         </div>
 
-        {{-- CARTES D’ACTIONS PRINCIPALES --}}
-        <div class="actions-grid">
-
-            <div class="action-card" id="reservation">
-                <div class="action-title">Réserver un site</div>
-                <div class="action-text">
-                    Parcourez les sites touristiques disponibles et réservez vos visites à l’avance.
-                </div>
-                <a href="#" class="action-link">Voir les sites &rarr;</a>
+        {{-- SECTION SITES PUBLIÉS --}}
+        <section id="sites">
+            <div class="sites-section-title">Sites touristiques publiés</div>
+            <div class="sites-section-sub">
+                Voici les sites actuellement publiés par la Maison du Tourisme et disponibles à la réservation.
             </div>
 
-            <div class="action-card">
-                <div class="action-title">Mes réservations</div>
-                <div class="action-text">
-                    Consultez vos réservations en cours, les dates prévues et les détails de vos visites.
-                </div>
-                <a href="#" class="action-link">Accéder à mes réservations &rarr;</a>
-            </div>
+            @if($sites->count())
+                <div class="sites-grid">
+                    @foreach($sites as $site)
+                        <div class="site-card">
+                            @if($site->image_url)
+    <img src="{{ asset('storage/' . $site->image_url) }}" class="site-img">
+@endif
 
-            <div class="action-card" id="assistance">
-                <div class="action-title">Assistance Maison du Tourisme</div>
-                <div class="action-text">
-                    Besoin d’aide pour organiser votre séjour ou modifier une réservation ?
-                </div>
-                <a href="#" class="action-link">Contacter l’assistance &rarr;</a>
-            </div>
 
-        </div>
+                            <div class="site-title">{{ $site->titre }}</div>
+                            <div class="site-city">{{ $site->ville }}</div>
+                            <div class="site-desc">
+                                {{ \Illuminate\Support\Str::limit($site->description, 120) }}
+                            </div>
+
+                            <div class="site-actions">
+                                <span class="site-tag">Disponible</span>
+                                <button type="button" class="btn-reserver">
+                                    Réserver ce site
+                                </button>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p style="font-size: 0.85rem; color: #6b7280;">
+                    Aucun site n’a encore été publié. Revenez un peu plus tard.
+                </p>
+            @endif
+        </section>
+
+
+        {{-- SECTION CONTACT (placeholder, à compléter plus tard) --}}
+        <section id="contact" style="margin-top: 2.5rem;">
+            <div class="sites-section-title">Contact</div>
+            <div class="sites-section-sub">
+                Pour toute question ou assistance, veuillez contacter la Maison du Tourisme.
+            </div>
+        </section>
 
     </div>
 

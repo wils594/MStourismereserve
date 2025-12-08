@@ -458,7 +458,7 @@
             </div>
 
             <div class="card-header">
-                <h1 class="card-title">Connexion à l’espace admin</h1>
+                <h1 class="card-title">Connexion</h1>
                 <p class="card-subtitle">
                     Entrez vos identifiants pour accéder au tableau de bord de la Maison du Tourisme.
                 </p>

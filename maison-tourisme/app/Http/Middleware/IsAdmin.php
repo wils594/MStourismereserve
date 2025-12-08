@@ -10,9 +10,15 @@ class IsAdmin
 {
     public function handle(Request $request, Closure $next): Response
     {
-        // Si pas connecté OU pas admin → accès refusé
-        if (!auth()->check() || auth()->user()->role !== 'admin') {
+        $user = $request->user();
+
+        if (! $user) {
+            return redirect()->route('login');
+        }
+
+        if ($user->role !== 'admin') {
             abort(403, 'Accès refusé.');
+            // ou : return redirect()->route('accueil');
         }
 
         return $next($request);
