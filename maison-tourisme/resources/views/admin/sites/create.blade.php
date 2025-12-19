@@ -55,12 +55,14 @@
         }
 
         input[type="text"],
-        textarea {
+        textarea,
+        input[type="file"] {
             width: 100%;
             padding: 0.5rem 0.6rem;
             border-radius: 0.5rem;
             border: 1px solid #d1d5db;
             font-size: 0.85rem;
+            background: #ffffff;
         }
 
         textarea {
@@ -132,7 +134,10 @@
 
     <div class="card">
 
-        <form method="POST" action="{{ route('admin.sites.store') }}">
+        {{-- FORMULAIRE PRINCIPAL --}}
+        <form method="POST"
+              action="{{ route('admin.sites.store') }}"
+              enctype="multipart/form-data">
             @csrf
 
             <div class="form-row">
@@ -153,12 +158,14 @@
                 </div>
             </div>
 
-            <div class="mb-4">
-                           <label class="block text-sm font-medium mb-1">Image du site :</label>
-                            <input type="file" name="image" accept="image/*"
-                            class="w-full border rounded px-3 py-2 bg-white">
-                         </div>
-
+            {{-- IMPORT D’IMAGE --}}
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="image">Image du site :</label>
+                <input type="file" id="image" name="image" accept="image/*">
+                @error('image')
+                    <div class="error">{{ $message }}</div>
+                @enderror
+            </div>
 
             <div class="form-group" style="margin-bottom: 1rem;">
                 <label for="description">Description</label>
@@ -175,10 +182,11 @@
             </div>
 
             <div class="form-footer">
-                <button type="submit" class="btn-primary">Enregistrer le site</button>
+                <button type="submit" class="btn-primary">
+                    Enregistrer le site
+                </button>
 
-                <form method="POST" action="{{ route('admin.sites.store') }}" enctype="multipart/form-data">
-
+                <a href="{{ route('admin.sites.index') }}" class="btn-secondary">
                     Annuler
                 </a>
             </div>

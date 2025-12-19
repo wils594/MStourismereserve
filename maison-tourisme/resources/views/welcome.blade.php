@@ -1,491 +1,285 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ config('app.name', 'Maison du Tourisme') }}</title>
 
-    <title>{{ config('app.name', 'Maison du Tourisme') }}</title>
+<link rel="preconnect" href="https://fonts.bunny.net">
+<link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700,800,900" rel="stylesheet" />
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    font-family:'Instrument Sans',sans-serif;
+    background:#020617;
+    color:#fff;
+    overflow-x:hidden
+}
 
-    <!-- Styles / Scripts -->
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @endif
+/* ===== HERO ===== */
+.hero-wrapper{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden
+}
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+/* BLEU + JAUNE animated mesh */
+.animated-bg{
+    position:absolute;
+    inset:0;
+    background:
+    radial-gradient(at 0% 0%,#1e3a8a 0%,transparent 55%),
+    radial-gradient(at 100% 0%,#0ea5e9 0%,transparent 55%),
+    radial-gradient(at 100% 100%,#facc15 0%,transparent 50%),
+    radial-gradient(at 0% 100%,#1e40af 0%,transparent 55%);
+    animation:meshMove 22s ease infinite
+}
 
-        body {
-            margin: 0;
-            font-family: 'Instrument Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-            background: radial-gradient(circle at top left, #fefce8, #eff6ff 45%, #e0f2fe 75%);
-        }
+@keyframes meshMove{
+    50%{transform:scale(1.08) rotate(4deg)}
+}
 
-        .hero-wrapper {
-            width: 100%;
-            max-width: 1120px;
-            perspective: 1400px; /* profondeur 3D */
-        }
+.container{
+    position:relative;
+    z-index:10;
+    max-width:1300px;
+    padding:2rem
+}
 
-        .hero-card {
-            position: relative;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2.5rem;
-            padding: 2.4rem 2.6rem;
-            border-radius: 1.75rem;
-            background: #ffffff;
-            box-shadow:
-                0 22px 55px rgba(15, 23, 42, 0.18),
-                0 0 0 1px rgba(15, 23, 42, 0.04);
-            overflow: hidden;
-            transform-style: preserve-3d;      /* active la 3D interne */
-            transform-origin: center center;
-            transition: transform 0.25s ease-out,
-                        box-shadow 0.25s ease-out;
-        }
+.hero-grid{
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:4rem;
+    align-items:center
+}
 
-        /* léger soulèvement par défaut */
-        .hero-card.initial-tilt {
-            transform: rotateX(4deg) rotateY(-5deg) translateY(-4px);
-        }
+/* STATUS */
+.status-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:.6rem;
+    padding:.6rem 1.3rem;
+    background:rgba(250,204,21,.12);
+    border:1px solid rgba(250,204,21,.35);
+    border-radius:100px;
+    margin-bottom:2rem
+}
 
-        .hero-card.hovered {
-            box-shadow:
-                0 30px 70px rgba(15, 23, 42, 0.30),
-                0 0 0 1px rgba(15, 23, 42, 0.06);
-        }
+.status-dot{
+    width:10px;
+    height:10px;
+    background:#22c55e;
+    border-radius:50%
+}
 
-        /* Décor de fond */
-        .hero-card::before {
-            content: "";
-            position: absolute;
-            width: 320px;
-            height: 320px;
-            border-radius: 999px;
-            background: radial-gradient(circle, rgba(250, 204, 21, 0.18), transparent 60%);
-            top: -60px;
-            right: -80px;
-            pointer-events: none;
-            transform: translateZ(-40px);
-        }
+/* TITRES */
+.main-title{
+    font-size:clamp(2.5rem,6vw,5rem);
+    font-weight:900;
+    line-height:1.1;
+    margin-bottom:1.5rem
+}
 
-        .hero-card::after {
-            content: "";
-            position: absolute;
-            width: 260px;
-            height: 260px;
-            border-radius: 999px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.16), transparent 65%);
-            bottom: -80px;
-            left: -60px;
-            pointer-events: none;
-            transform: translateZ(-50px);
-        }
+.gradient-text{
+    background:linear-gradient(135deg,#facc15,#fde047,#38bdf8);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent
+}
 
-        /* Colonne texte (gauche) */
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            flex: 1 1 320px;
-            min-width: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            transform: translateZ(40px); /* le texte ressort légèrement */
-        }
+.subtitle{
+    color:#c7d2fe;
+    max-width:540px;
+    margin-bottom:2.5rem
+}
 
-        .hero-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            padding: 0.32rem 0.9rem;
-            border-radius: 999px;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: #1d4ed8;
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            margin-bottom: 1rem;
-            transform: translateZ(55px);
-        }
+/* CTA */
+.cta-buttons{display:flex;gap:1rem}
 
-        .hero-pill-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 999px;
-            background: #facc15;
-        }
+.btn{
+    padding:1.1rem 2.8rem;
+    border-radius:100px;
+    font-weight:800;
+    text-decoration:none;
+    letter-spacing:.2px
+}
 
-        .hero-title {
-            font-size: clamp(2.1rem, 3.2vw, 2.7rem);
-            font-weight: 700;
-            color: #0f172a;
-            margin: 0 0 0.75rem 0;
-        }
+.btn-primary{
+    background:linear-gradient(135deg,#facc15,#fde047);
+    color:#020617;
+    box-shadow:0 10px 30px rgba(250,204,21,.35)
+}
 
-        .hero-highlight {
-            color: #f59e0b;
-        }
+.btn-secondary{
+    background:rgba(59,130,246,.08);
+    color:#fff;
+    border:2px solid rgba(59,130,246,.4)
+}
 
-        .hero-subtitle {
-            font-size: 0.96rem;
-            color: #4b5563;
-            line-height: 1.65;
-            max-width: 480px;
-            margin-bottom: 1.6rem;
-        }
+/* ===== 3D MODEL ===== */
+.model-3d-wrapper{perspective:1600px}
 
-        .hero-badges {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1.6rem;
-            font-size: 0.78rem;
-            color: #6b7280;
-        }
+.model-3d{
+    width:100%;
+    max-width:420px;
+    aspect-ratio:4/5;
+    transform-style:preserve-3d;
+    transition:transform .15s ease-out
+}
 
-        .hero-badge {
-            padding: 0.28rem 0.7rem;
-            border-radius: 999px;
-            border: 1px dashed #e5e7eb;
-            background: #f9fafb;
-            transform: translateZ(50px);
-        }
+.model-3d-card{
+    position:relative;
+    height:100%;
+    border-radius:28px;
+    overflow:hidden;
+    background:linear-gradient(
+        145deg,
+        rgba(59,130,246,.25),
+        rgba(250,204,21,.08)
+    );
+    backdrop-filter:blur(22px);
+    border:1px solid rgba(255,255,255,.18);
+    box-shadow:0 45px 90px rgba(2,6,23,.7);
+    transform:translateZ(60px)
+}
 
-        .btn-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.9rem;
-            margin-bottom: 1.25rem;
-        }
+.model-3d-image{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    opacity:0;
+    transition:opacity .8s ease
+}
 
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.8rem 1.9rem;
-            border-radius: 999px;
-            border: 1px solid transparent;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.18s ease-in-out;
-            min-width: 150px;
-            white-space: nowrap;
-            transform: translateZ(60px);
-        }
+.model-3d-image.active{opacity:.95}
 
-        .btn-primary {
-            background: linear-gradient(135deg, #facc15, #f59e0b);
-            color: #0f172a;
-            border-color: #fbbf24;
-            box-shadow:
-                0 12px 32px rgba(250, 204, 21, 0.6),
-                0 0 0 1px rgba(251, 191, 36, 0.75);
-        }
+.model-3d-overlay{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(to top,rgba(2,6,23,.88),transparent 60%);
+    display:flex;
+    align-items:flex-end;
+    padding:1.6rem
+}
 
-        .btn-primary:hover {
-            transform: translateZ(70px) translateY(-1px) scale(1.01);
-            box-shadow:
-                0 18px 40px rgba(251, 191, 36, 0.7),
-                0 0 0 1px rgba(251, 191, 36, 0.95);
-        }
+.model-3d-title{
+    font-size:1.25rem;
+    font-weight:900;
+    color:#fde047
+}
 
-        .btn-outline {
-            background: #ffffff;
-            color: #1d4ed8;
-            border-color: #bfdbfe;
-        }
-
-        .btn-outline:hover {
-            background: #eff6ff;
-            border-color: #60a5fa;
-            color: #1e40af;
-            transform: translateZ(70px) translateY(-1px);
-        }
-
-        .hero-note {
-            font-size: 0.78rem;
-            color: #9ca3af;
-            transform: translateZ(35px);
-        }
-
-        /* Colonne image (droite) – détachée */
-        .hero-media {
-            position: relative;
-            flex: 1 1 320px;
-            max-width: 440px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1;
-            transform: translateZ(30px);
-        }
-
-        /* carte flottante derrière l'image */
-        .media-background-card {
-            position: absolute;
-            inset: auto;
-            right: 0.4rem;
-            top: 1.2rem;
-            width: 86%;
-            height: 82%;
-            border-radius: 1.7rem;
-            background: linear-gradient(145deg, #eff6ff, #fee2e2);
-            opacity: 0.9;
-            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.25);
-            transform: translate(14px, 16px) translateZ(10px);
-        }
-
-        .media-frame {
-            position: relative;
-            width: 100%;
-            max-width: 420px;
-            aspect-ratio: 4 / 3;
-            border-radius: 1.6rem;
-            overflow: hidden;
-            background: #020617;
-            box-shadow:
-                0 18px 45px rgba(15, 23, 42, 0.55),
-                0 0 0 1px rgba(15, 23, 42, 0.45);
-            transform: translateZ(70px);
-        }
-
-        .media-gradient-ring {
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            pointer-events: none;
-            background: linear-gradient(135deg, rgba(250, 204, 21, 0.4), rgba(59, 130, 246, 0.45));
-            opacity: 0.35;
-            mix-blend-mode: soft-light;
-        }
-
-        .slider {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .slider img {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0;
-            animation: sliderFade 20s infinite;
-        }
-
-        .slider img:nth-child(1) { animation-delay: 0s; }
-        .slider img:nth-child(2) { animation-delay: 5s; }
-        .slider img:nth-child(3) { animation-delay: 10s; }
-        .slider img:nth-child(4) { animation-delay: 15s; }
-
-        @keyframes sliderFade {
-            0%   { opacity: 0; transform: scale(1); }
-            5%   { opacity: 1; transform: scale(1.01); }
-            20%  { opacity: 1; transform: scale(1.03); }
-            25%  { opacity: 0; transform: scale(1.04); }
-            100% { opacity: 0; transform: scale(1.04); }
-        }
-
-        .media-tag {
-            position: absolute;
-            left: 1rem;
-            bottom: 1rem;
-            padding: 0.35rem 0.8rem;
-            font-size: 0.72rem;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            border-radius: 999px;
-            background: rgba(15, 23, 42, 0.85);
-            color: #facc15;
-            border: 1px solid rgba(250, 204, 21, 0.7);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .media-tag::before {
-            content: "";
-            width: 7px;
-            height: 7px;
-            border-radius: 999px;
-            background: #22c55e;
-        }
-
-        @media (max-width: 900px) {
-            .hero-card {
-                padding: 1.8rem 1.5rem 2rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero-card {
-                flex-direction: column;
-            }
-
-            /* sur mobile : image en haut, texte en bas */
-            .hero-media {
-                order: -1;
-                max-width: 100%;
-            }
-
-            .media-background-card {
-                display: none;
-            }
-
-            .hero-content {
-                text-align: left;
-            }
-
-            .hero-subtitle {
-                max-width: 100%;
-            }
-
-            .btn-row {
-                flex-wrap: wrap;
-            }
-        }
-
-        @media (max-width: 640px) {
-            body {
-                padding: 0.75rem;
-            }
-
-            .hero-card {
-                border-radius: 1.3rem;
-                padding: 1.6rem 1.2rem 1.9rem;
-            }
-
-            .btn-row {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .btn {
-                width: 100%;
-            }
-        }
-    </style>
+.model-3d-text{
+    font-size:.95rem;
+    line-height:1.55;
+    color:#e0e7ff
+}
+</style>
 </head>
+
 <body>
 
 <div class="hero-wrapper">
-    <div class="hero-card initial-tilt">
+    <div class="animated-bg"></div>
 
-        {{-- Colonne texte gauche --}}
-        <div class="hero-content">
-            <div class="hero-pill">
-                <span class="hero-pill-dot"></span>
-                <span>Maison du Tourisme</span>
-            </div>
+    <div class="container">
+        <div class="hero-grid">
 
-            <h1 class="hero-title">
-                Explorez, réservez et vivez
-                <span class="hero-highlight">Aného autrement.</span>
-            </h1>
+            <!-- LEFT -->
+            <div>
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    <span>Plateforme 100% Digitale</span>
+                </div>
 
-            <p class="hero-subtitle">
-                Accédez à votre espace pour gérer vos réservations, découvrir les
-                sites touristiques et planifier vos visites en toute simplicité,
-                que vous soyez visiteur, guide ou agence.
-            </p>
+                <h1 class="main-title">
+                    Explorez, réservez<br>
+                    et vivez <span class="gradient-text">Aného</span><br>
+                    autrement.
+                </h1>
 
-            <div class="hero-badges">
-                <span class="hero-badge">Réservations en ligne</span>
-                <span class="hero-badge">Sites naturels &amp; culturels</span>
-                <span class="hero-badge">Expérience 100% digitale</span>
-            </div>
+                <p class="subtitle">
+                    Découvrez Aného à travers son histoire, ses plages et sa culture vivante.
+                </p>
 
-            <div class="btn-row">
-                @if (Route::has('login'))
-                    <a href="{{ route('login') }}" class="btn btn-primary">
-                        Se connecter
-                    </a>
-
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="btn btn-outline">
-                            S'inscrire
+                <div class="cta-buttons">
+                    @if(Route::has('login'))
+                        <a href="{{ route('login') }}" class="btn btn-primary">
+                            Commencer →
                         </a>
                     @endif
-                @else
-                    <span>Aucune route d’authentification détectée.</span>
-                @endif
-            </div>
-
-            <div class="hero-note">
-                &copy; {{ date('Y') }} {{ config('app.name', 'Maison du Tourisme') }} — Plateforme de réservation touristique.
-            </div>
-        </div>
-
-        {{-- Colonne image droite, détachée --}}
-        <div class="hero-media">
-            <div class="media-background-card"></div>
-
-            <div class="media-frame">
-                <div class="slider">
-                    <img src="{{ asset('images/ge1.png') }}" alt="Site touristique 1">
-                    <img src="{{ asset('images/ge2.jpg') }}" alt="Site touristique 2">
-                    <img src="{{ asset('images/ge3.jpg') }}" alt="Site touristique 3">
-                    <img src="{{ asset('images/ge4.jpg') }}" alt="Site touristique 4">
-                </div>
-                <div class="media-gradient-ring"></div>
-                <div class="media-tag">
-                    Découvertes à Aného
+                    <a href="#" class="btn btn-secondary">
+                        En savoir plus
+                    </a>
                 </div>
             </div>
-        </div>
 
+            <!-- RIGHT -->
+            <div class="model-3d-wrapper">
+                <div class="model-3d" id="model3d">
+                    <div class="model-3d-card">
+
+                        <img src="images/IMG-20251216-WA0055.jpg" class="model-3d-image active">
+                        <img src="images/IMG-20251216-WA0056.jpg" class="model-3d-image">
+                        <img src="images/IMG-20251216-WA0057.jpg" class="model-3d-image">
+                        <img src="images/IMG-20251216-WA0058.jpg" class="model-3d-image">
+                        <img src="images/IMG-20251216-WA0059.jpg" class="model-3d-image">
+
+                        <div class="model-3d-overlay">
+                            <div>
+                                <div class="model-3d-title" id="aneoTitle">
+                                    Aného – Côte historique
+                                </div>
+                                <div class="model-3d-text" id="aneoText">
+                                    Ville côtière emblématique du sud-est du Togo.
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
 
 <script>
-    // Effet 3D interactif au mouvement de la souris
-    (function () {
-        const card = document.querySelector('.hero-card');
-        if (!card) return;
+/* ===== 3D INTERACTION ===== */
+const model=document.getElementById('model3d');
+model.addEventListener('mousemove',e=>{
+const r=model.getBoundingClientRect();
+const rx=-((e.clientY-r.top)/r.height-.5)*30;
+const ry=((e.clientX-r.left)/r.width-.5)*30;
+model.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg)`;
+});
+model.addEventListener('mouseleave',()=>model.style.transform='');
 
-        const maxRotate = 10; // degrés max
+/* ===== IMAGE ROTATION ===== */
+const images=document.querySelectorAll('.model-3d-image');
+const texts=[
+{t:"Aného – Patrimoine historique",d:"Ancienne capitale coloniale, pilier de l’histoire togolaise."},
+{t:"Aného – Littoral unique",d:"Entre océan Atlantique et lac Togo."},
+{t:"Aného – Culture vivante",d:"Chefferies, traditions et festivals."},
+{t:"Aného – Destination touristique",d:"Un cadre idéal pour un tourisme responsable."},
+{t:"Aného – Héritage et avenir",d:"Modernité et valorisation locale."}
+];
 
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+let i=0;
+const title=document.getElementById('aneoTitle');
+const text=document.getElementById('aneoText');
 
-            const rotateY = ((x - rect.width / 2) / rect.width) * (maxRotate * 2);
-            const rotateX = -((y - rect.height / 2) / rect.height) * (maxRotate * 2);
-
-            card.classList.add('hovered');
-            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-        });
-
-        card.addEventListener('mouseleave', () => {
-            card.classList.remove('hovered');
-            card.style.transform = '';
-            card.classList.add('initial-tilt');
-        });
-
-        card.addEventListener('mouseenter', () => {
-            card.classList.remove('initial-tilt');
-        });
-    })();
+setInterval(()=>{
+images[i].classList.remove('active');
+i=(i+1)%images.length;
+images[i].classList.add('active');
+title.textContent=texts[i].t;
+text.textContent=texts[i].d;
+},5000);
 </script>
 
 </body>

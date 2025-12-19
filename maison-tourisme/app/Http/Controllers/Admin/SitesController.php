@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Site;
-use App\Models\Sites;
+use App\Models\Sites; // ou App\Models\Site si modèle au singulier
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class SitesController extends Controller
 {
@@ -30,21 +30,31 @@ class SitesController extends Controller
     }
 
     /**
-     * Enregistrement d’un nouveau site.
+     * Enregistrement d'un nouveau site.
      */
     public function store(Request $request): RedirectResponse
     {
+        // 1. Validation des champs texte
         $data = $request->validate([
-            'titre'       => ['required', 'string', 'max:255'],
-            'ville'       => ['nullable', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'image'     => ['nullable', 'string', 'max:255'],
-            'is_publishing' => ['nullable', 'boolean'],
+            'titre'        => ['required', 'string', 'max:255'],
+            'ville'        => ['required', 'string', 'max:255'],
+            'description'  => ['required', 'string'],
+            'is_publishing'=> ['nullable'],
         ]);
 
-        // Checkbox non cochée = champ absent → on force false
+        // 2. Upload de l'image (OPTIONNEL)
+        if ($request->hasFile('image')) {
+            // Stocke le fichier dans storage/app/public/sites
+            $path = $request->file('image')->store('sites', 'public');
+
+            // On enregistre le chemin dans la colonne image_url
+            $data['image_url'] = $path;
+        }
+
+        // 3. Checkbox publication
         $data['is_publishing'] = $request->has('is_publishing');
 
+        // 4. Création en base
         Sites::create($data);
 
         return redirect()
@@ -55,27 +65,37 @@ class SitesController extends Controller
     /**
      * Formulaire d’édition.
      */
-    public function edit(Sites $sites): View
+    public function edit(Sites $site): View
     {
         return view('admin.sites.edit', compact('site'));
     }
 
     /**
-     * Mise à jour d’un site.
+     * Mise à jour d'un site.
      */
-    public function update(Request $request, Sites $sites): RedirectResponse
+    public function update(Request $request, Sites $site): RedirectResponse
     {
         $data = $request->validate([
-            'titre'       => ['required', 'string', 'max:255'],
-            'ville'       => ['nullable', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'image'     => ['nullable', 'string', 'max:255'],
-            'is_publishing' => ['nullable', 'boolean'],
+            'titre'        => ['required', 'string', 'max:255'],
+            'ville'        => ['required', 'string', 'max:255'],
+            'description'  => ['required', 'string'],
+            'is_publishing'=> ['nullable'],
         ]);
+
+        // Nouvelle image ?
+        if ($request->hasFile('image')) {
+            // Supprimer l'ancienne image si elle existe
+            if ($site->image_url && Storage::disk('public')->exists($site->image_url)) {
+                Storage::disk('public')->delete($site->image_url);
+            }
+
+            // Stocker la nouvelle image
+            $data['image_url'] = $request->file('image')->store('sites', 'public');
+        }
 
         $data['is_publishing'] = $request->has('is_publishing');
 
-        $sites->update($data);
+        $site->update($data);
 
         return redirect()
             ->route('admin.sites.index')
@@ -83,14 +103,19 @@ class SitesController extends Controller
     }
 
     /**
-     * Suppression d’un site.
+     * Suppression d'un site.
      */
     public function destroy(Sites $site): RedirectResponse
     {
+        // Supprimer l'image associée si elle existe
+        if ($site->image_url && Storage::disk('public')->exists($site->image_url)) {
+            Storage::disk('public')->delete($site->image_url);
+        }
+
         $site->delete();
 
         return redirect()
             ->route('admin.sites.index')
-            ->with('success', 'Le site a été supprimé avec succès.');
+            ->with('success', 'Le site a été supprimé.');
     }
 }

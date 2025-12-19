@@ -6,18 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sites extends Model
 {
-    // Laravel va utiliser la table "sites" automatiquement
-    // si ta table porte un autre nom, ajoute: protected $table = '...';
+    protected $table = 'sites';
 
     protected $fillable = [
         'titre',
         'ville',
         'description',
-        'image',
+        'image_url',      //  on garde uniquement "image_url"
         'is_publishing',
     ];
 
-    // Si tu veux manipuler is_publishing comme un booléen
     protected $casts = [
         'is_publishing' => 'boolean',
     ];
