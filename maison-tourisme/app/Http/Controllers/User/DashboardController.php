@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\Site;
+use App\Models\Reservation;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // On récupère les sites publiés, les plus récents en premier
-        $sites = Site::where('is_published', true)
-            ->latest()
+        $reservations = Reservation::with('site')
+            ->where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('user.dashboard', compact('sites'));
+        return view('user.dashboard', compact('reservations'));
     }
 }

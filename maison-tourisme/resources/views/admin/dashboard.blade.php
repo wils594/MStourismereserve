@@ -1,236 +1,272 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8" />
-    <title>Maison du Tourisme – Tableau de bord</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <title>Administration – Maison du Tourisme</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        body { background-color: #f4f7fb; }
+
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #0b2a5a, #0a1f44);
+            color: #fff;
+        }
+
+        .sidebar .brand {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+        }
+
+        .sidebar .brand span {
+            font-size: .75rem;
+            color: #ffc107;
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255,255,255,.85);
+            border-radius: .5rem;
+            padding: .65rem 1rem;
+            display: flex;
+            gap: .6rem;
+            margin-bottom: .25rem;
+        }
+
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
+            background: #ffc107;
+            color: #0a1f44;
+            font-weight: 600;
+        }
+
+        .topbar {
+            height: 64px;
+            background: #fff;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .stat-card {
+            border-radius: 1rem;
+            border: none;
+            box-shadow: 0 6px 18px rgba(0,0,0,.05);
+        }
+
+        .stat-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.2rem;
+        }
+    </style>
 </head>
 
-<body class="bg-slate-100 min-h-screen">
+<body>
 
-<div class="flex min-h-screen">
+<div class="d-flex min-vh-100">
 
-    {{-- SIDEBAR --}}
-    <aside class="w-64 bg-blue-900 text-slate-100 flex flex-col">
-
-        <div class="px-6 py-5 border-b border-amber-400/40">
-            <h1 class="text-lg font-bold tracking-wide">
-                Maison du Tourisme
-            </h1>
-            <p class="text-xs text-amber-300 mt-1">
-                Commune des Lacs 1 · Administration
-            </p>
+    <!-- SIDEBAR -->
+    <aside class="sidebar d-flex flex-column">
+        <div class="brand">
+            <h5 class="fw-bold mb-0">Maison du Tourisme</h5>
+            <span>Administration</span>
         </div>
 
-        <nav class="flex-1 px-4 py-4 space-y-2 text-sm">
-
-            {{-- Dashboard --}}
-            <a href="{{ route('admin.dashboard') }}"
-               class="flex items-center gap-2 px-3 py-2 rounded-md bg-amber-400 text-blue-900 font-semibold">
-                <span>Tableau de bord</span>
+        <nav class="flex-grow-1 p-3">
+            <a href="{{ route('admin.dashboard') }}" class="nav-link active">
+                <i class="bi bi-speedometer2"></i> Tableau de bord
             </a>
-
-            {{-- Sites --}}
-            <a href="{{ route('admin.sites.index') }}"
-               class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-blue-800 hover:text-amber-300 transition">
-                <span>Sites touristiques</span>
+            <a href="{{ route('admin.reservations.index') }}" class="nav-link">
+                <i class="bi bi-calendar-check"></i> Réservations
             </a>
-
-            <a href="#"
-               class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-blue-800 hover:text-amber-300 transition">
-                <span>Réservations</span>
+            <a href="{{ route('admin.sites.index') }}" class="nav-link">
+                <i class="bi bi-geo-alt"></i> Sites touristiques
             </a>
-
-            <a href="#"
-               class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-blue-800 hover:text-amber-300 transition">
-                <span>Visiteurs</span>
-            </a>
-
-            <a href="#"
-               class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-blue-800 hover:text-amber-300 transition">
-                <span>Paramètres</span>
-            </a>
-
         </nav>
 
-        <div class="px-4 py-4 border-t border-blue-800 text-xs text-blue-200">
+        <div class="p-3 small border-top border-white border-opacity-10">
             Connecté en tant que<br>
-            <span class="font-semibold text-white">
-                {{ auth()->user()->name ?? 'Admin' }}
-            </span>
+            <strong>{{ auth()->user()->name }}</strong>
         </div>
     </aside>
 
-    {{-- CONTENU PRINCIPAL --}}
-    <main class="flex-1 flex flex-col">
+    <!-- MAIN -->
+    <div class="flex-grow-1 d-flex flex-column">
 
-        {{-- TOPBAR --}}
-        <header class="h-16 bg-white border-b border-blue-900/10 flex items-center justify-between px-6">
+        <!-- TOPBAR -->
+        <header class="topbar d-flex justify-content-between align-items-center px-4">
             <div>
-                <h2 class="text-lg font-semibold text-blue-900">
-                    Tableau de bord
-                </h2>
-                <p class="text-xs text-slate-500">
-                    Commune des Lacs 1 · Gestion touristique
-                </p>
+                <h6 class="fw-semibold mb-0">Tableau de bord</h6>
+                <small class="text-muted">Statistiques et activité récente</small>
             </div>
 
-            <div class="flex items-center gap-3">
-                <span class="text-sm text-slate-600">
-                    {{ auth()->user()->email ?? '' }}
-                </span>
-
+            <div class="d-flex gap-3 align-items-center">
+                <span class="text-muted small">{{ auth()->user()->email }}</span>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button
-                        type="submit"
-                        class="text-xs px-3 py-1.5 rounded-md bg-red-500 text-white hover:bg-red-600 transition">
-                        Déconnexion
-                    </button>
+                    <button class="btn btn-sm btn-danger">Déconnexion</button>
                 </form>
             </div>
         </header>
 
-        {{-- CONTENU --}}
-        <section class="flex-1 p-6 space-y-6">
+        <!-- CONTENT -->
+        <main class="p-4 flex-grow-1">
 
-            {{-- STATS --}}
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <!-- STATS -->
+            <div class="row g-4 mb-4">
 
-                <div class="bg-white shadow-sm rounded-xl p-4">
-                    <h3 class="text-xs font-semibold text-slate-500 uppercase">
-                        Visiteurs inscrits
-                    </h3>
-                    <p class="mt-3 text-3xl font-bold text-emerald-700">
-                        128
-                    </p>
-                    <p class="mt-1 text-xs text-emerald-600">
-                        +8 cette semaine
-                    </p>
+                <div class="col-md-4">
+                    <div class="card stat-card p-3">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <small class="text-muted">Visiteurs</small>
+                                <h3 class="fw-bold text-success">{{ $visiteursCount }}</h3>
+                            </div>
+                            <div class="stat-icon bg-success">
+                                <i class="bi bi-people"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="bg-white shadow-sm rounded-xl p-4">
-                    <h3 class="text-xs font-semibold text-slate-500 uppercase">
-                        Réservations à venir
-                    </h3>
-                    <p class="mt-3 text-3xl font-bold text-blue-900">
-                        37
-                    </p>
-                    <p class="mt-1 text-xs text-slate-500">
-                        Prochaines 30 jours
-                    </p>
+                <div class="col-md-4">
+                    <div class="card stat-card p-3">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <small class="text-muted">Arrivées</small>
+                                <h3 class="fw-bold text-primary">{{ $totalArrivees }}</h3>
+                            </div>
+                            <div class="stat-icon bg-primary">
+                                <i class="bi bi-arrow-down-circle"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="bg-white shadow-sm rounded-xl p-4">
-                    <h3 class="text-xs font-semibold text-slate-500 uppercase">
-                        Arrivées cette semaine
-                    </h3>
-                    <p class="mt-3 text-3xl font-bold text-amber-500">
-                        12
-                    </p>
-                    <p class="mt-1 text-xs text-slate-500">
-                        Lundi → Dimanche
-                    </p>
-                </div>
-
-                <div class="bg-white shadow-sm rounded-xl p-4">
-                    <h3 class="text-xs font-semibold text-slate-500 uppercase">
-                        Sites disponibles
-                    </h3>
-                    <p class="mt-3 text-3xl font-bold text-emerald-600">
-                        {{ $publishedSites ?? 0 }}
-                    </p>
-                    <p class="mt-1 text-xs text-slate-500">
-                        Visibles en ligne
-                    </p>
+                <div class="col-md-4">
+                    <div class="card stat-card p-3">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <small class="text-muted">Départs</small>
+                                <h3 class="fw-bold text-warning">{{ $totalDeparts }}</h3>
+                            </div>
+                            <div class="stat-icon bg-warning">
+                                <i class="bi bi-arrow-up-circle"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
 
-            {{-- TABLE --}}
-            <div class="bg-white shadow-sm rounded-xl">
-                <div class="p-6">
+            <!-- GRAPH -->
+            <div class="card stat-card mb-4">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h6 class="fw-semibold mb-0">Arrivées & Départs par mois</h6>
+                    <button class="btn btn-sm btn-warning fw-semibold" onclick="exportPDF()">
+                        <i class="bi bi-file-earmark-pdf"></i> Export PDF
+                    </button>
+                </div>
 
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-base font-semibold text-blue-900">
-                            Prochaines arrivées
-                        </h3>
-                        <a href="#" class="text-xs text-amber-500 hover:underline">
-                            Voir toutes les réservations
-                        </a>
-                    </div>
+                <div class="card-body">
+                    <canvas id="fluxChart" height="120"></canvas>
+                </div>
+            </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full text-sm">
-                            <thead class="bg-slate-50 border-b">
-                                <tr class="text-xs text-slate-500 uppercase">
-                                    <th class="px-2 py-2">Visiteur</th>
-                                    <th class="px-2 py-2">Pays</th>
-                                    <th class="px-2 py-2">Arrivée</th>
-                                    <th class="px-2 py-2">Sites</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y">
+            <!-- RÉSERVATIONS RÉCENTES -->
+            <div class="card stat-card">
+                <div class="card-header bg-white fw-semibold">
+                    Réservations récentes
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Visiteur</th>
+                                <th>Pays</th>
+                                <th>Arrivée</th>
+                                <th>Site</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($reservationsRecentes as $reservation)
                                 <tr>
-                                    <td class="px-2 py-2">John Smith</td>
-                                    <td class="px-2 py-2">États-Unis</td>
-                                    <td class="px-2 py-2">15/01/2026</td>
-                                    <td class="px-2 py-2">Plage d’Aného</td>
-                                    <td class="px-2 py-2 text-right">
-                                        <a href="#" class="text-xs text-blue-900 hover:underline">
-                                            Détails
-                                        </a>
+                                    <td class="fw-medium">{{ $reservation->nom_complet }}</td>
+                                    <td>{{ $reservation->pays_origine }}</td>
+                                    <td>{{ $reservation->date_arrivee->format('d/m/Y') }}</td>
+                                    <td>{{ optional($reservation->site)->titre }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-4">
+                                        Aucune réservation récente
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="px-2 py-2">Maria Lopez</td>
-                                    <td class="px-2 py-2">Espagne</td>
-                                    <td class="px-2 py-2">18/01/2026</td>
-                                    <td class="px-2 py-2">Lac Togo</td>
-                                    <td class="px-2 py-2 text-right">
-                                        <a href="#" class="text-xs text-blue-900 hover:underline">
-                                            Détails
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            {{-- ACTIONS --}}
-            <div class="bg-white shadow-sm rounded-xl">
-                <div class="p-6">
-                    <h3 class="text-base font-semibold text-blue-900 mb-3">
-                        Actions rapides
-                    </h3>
-
-                    <div class="flex flex-wrap gap-3 text-sm">
-                        <a href="{{ route('admin.sites.create') }}"
-                           class="px-4 py-2 rounded-lg bg-amber-400 text-blue-900 font-semibold hover:bg-amber-500 transition">
-                            Ajouter un site touristique
-                        </a>
-
-                        <a href="{{ route('admin.sites.index') }}"
-                           class="px-4 py-2 rounded-lg bg-blue-50 text-blue-900 hover:bg-blue-100 transition">
-                            Gérer les sites
-                        </a>
-
-                        <a href="#"
-                           class="px-4 py-2 rounded-lg bg-blue-50 text-blue-900 hover:bg-blue-100 transition">
-                            Gérer les réservations
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-    </main>
+        </main>
+    </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    new Chart(document.getElementById('fluxChart'), {
+        type: 'line',
+        data: {
+            labels: {!! json_encode($labels) !!},
+            datasets: [
+                {
+                    label: 'Arrivées',
+                    data: {!! json_encode($arriveesParMois) !!},
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13,110,253,.15)',
+                    fill: true,
+                    tension: .4
+                },
+                {
+                    label: 'Départs',
+                    data: {!! json_encode($departsParMois) !!},
+                    borderColor: '#ffc107',
+                    backgroundColor: 'rgba(255,193,7,.2)',
+                    fill: true,
+                    tension: .4
+                }
+            ]
+        }
+    });
+
+    function exportPDF() {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF();
+        pdf.text("Statistiques – Maison du Tourisme", 20, 20);
+        pdf.text("Visiteurs : {{ $visiteursCount }}", 20, 35);
+        pdf.text("Arrivées : {{ $totalArrivees }}", 20, 45);
+        pdf.text("Départs : {{ $totalDeparts }}", 20, 55);
+        pdf.save("statistiques-tourisme.pdf");
+    }
+</script>
 
 </body>
 </html>

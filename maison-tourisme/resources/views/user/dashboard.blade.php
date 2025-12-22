@@ -1,134 +1,163 @@
-<style>
-.main-header {
-    background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(249,250,251,0.95) 100%);
-    backdrop-filter: blur(20px);
-    border-radius: 24px;
-    padding: 2rem 2.5rem;
-    box-shadow: 
-        0 20px 60px rgba(0, 0, 0, 0.08),
-        0 0 0 1px rgba(255, 255, 255, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 2rem;
-    position: relative;
-    overflow: hidden;
-}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon espace client – Maison du Tourisme</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-.main-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, #3b82f6, #1e40af, #facc15);
-    background-size: 300% 100%;
-    animation: gradientFlow 4s ease infinite;
-}
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-@keyframes gradientFlow {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-}
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
-.main-title {
-    font-size: 2rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 45%, #facc15 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
-}
+    <style>
+        body {
+            background-color: #f4f7fb;
+        }
 
-.main-subtitle {
-    font-size: 1.05rem;
-    color: #6b7280;
-    font-weight: 500;
-    line-height: 1.5;
-}
+        .page-title {
+            color: #0b2a5a;
+            font-weight: 700;
+        }
 
-@media (max-width: 768px) {
-    .main-header {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 1.5rem;
-    }
-    
-    .main-title {
-        font-size: 1.5rem;
-    }
-    
-    .main-subtitle {
-        font-size: 0.95rem;
-    }
-    
-    .main-header form {
-        width: 100%;
-    }
-    
-    .main-header form button {
-        width: 100%;
-        justify-content: center;
-    }
-}
-</style>
+        .reservation-card {
+            border-radius: 1rem;
+        }
 
-<div class="main-header">
-    <div>
-        <div class="main-title">Bonjour, {{ auth()->user()->name ?? 'Utilisateur' }} 👋</div>
-        <div class="main-subtitle">
-            Bienvenue dans votre espace client de la Maison du Tourisme.
-        </div>
+        .badge-waiting {
+            background-color: #ffc107;
+            color: #0b2a5a;
+        }
+
+        .badge-valid {
+            background-color: #198754;
+        }
+
+        .badge-refused {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="container py-5">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="page-title mb-0">
+            <i class="bi bi-person-circle me-2"></i>
+            Mon tableau de bord
+        </h1>
+
+        <a href="{{ route('accueil') }}"
+           class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left"></i>
+            Retour à l’accueil
+        </a>
     </div>
 
-    {{-- Bouton Déconnexion stylé bleu & jaune --}}
-    <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button
-            type="submit"
-            style="
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                padding: 0.85rem 1.75rem;
-                
-                background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 50%, #facc15 100%);
-                border: none;
-                border-radius: 16px;
-                
-                font-weight: 700;
-                font-size: 0.95rem;
-                color: #1f2937;
-                cursor: pointer;
-                
-                box-shadow: 
-                    0 8px 24px rgba(59, 130, 246, 0.30),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.4);
-                backdrop-filter: blur(3px);
-                
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                position: relative;
-                overflow: hidden;
-            "
-            onmouseover="
-                this.style.transform='translateY(-3px) scale(1.03)'; 
-                this.style.boxShadow='0 12px 32px rgba(59, 130, 246, 0.45), inset 0 1px 0 rgba(255,255,255,0.5)';
-                this.querySelector('span').style.transform='rotate(15deg)';
-            "
-            onmouseout="
-                this.style.transform='translateY(0) scale(1)'; 
-                this.style.boxShadow='0 8px 24px rgba(59, 130, 246, 0.30), inset 0 1px 0 rgba(255,255,255,0.4)';
-                this.querySelector('span').style.transform='rotate(0deg)';
-            "
-            onmousedown="this.style.transform='translateY(-1px) scale(1.01)'"
-        >
-            <span style="font-size: 1.15rem; transition: transform 0.3s ease;"></span>
-            Déconnexion
-        </button>
-    </form>
-</div>
+    <!-- MESSAGE SUCCESS -->
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show mb-4">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    <!-- SECTION RÉSERVATIONS -->
+    <section>
+
+        <h2 class="h4 fw-semibold mb-4">
+            Mes réservations
+        </h2>
+
+        @forelse($reservations as $reservation)
+
+            <div class="card reservation-card shadow-sm border-0 mb-4">
+                <div class="card-body">
+
+                    <!-- HEADER CARD -->
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="fw-semibold mb-0">
+                            {{ optional($reservation->site)->titre }}
+                        </h5>
+
+                        @switch($reservation->statut)
+                            @case(\App\Models\Reservation::STATUT_EN_ATTENTE)
+                                <span class="badge badge-waiting">
+                                    En attente
+                                </span>
+                                @break
+
+                            @case(\App\Models\Reservation::STATUT_VALIDEE)
+                                <span class="badge badge-valid">
+                                    Validée
+                                </span>
+                                @break
+
+                            @case(\App\Models\Reservation::STATUT_REFUSEE)
+                                <span class="badge badge-refused">
+                                    Refusée
+                                </span>
+                                @break
+                        @endswitch
+                    </div>
+
+                    <!-- INFOS -->
+                    <p class="text-muted small mb-1">
+                        <i class="bi bi-geo-alt"></i>
+                        {{ optional($reservation->site)->ville }}
+                    </p>
+
+                    <p class="mb-1">
+                        <i class="bi bi-calendar-event"></i>
+                        Du <strong>{{ $reservation->date_arrivee->format('d/m/Y') }}</strong>
+                        au <strong>{{ optional($reservation->date_depart)?->format('d/m/Y') ?? '—' }}</strong>
+                        — {{ $reservation->nombre_jours }} jour(s)
+                    </p>
+
+                    <p class="mb-2">
+                        <i class="bi bi-people"></i>
+                        {{ $reservation->total_personnes }} personne(s)
+                        ({{ $reservation->adultes }} adulte(s),
+                        {{ $reservation->enfants }} enfant(s))
+                    </p>
+
+                    <!-- MOTIF DE REFUS -->
+                    @if(
+                        $reservation->statut === \App\Models\Reservation::STATUT_REFUSEE
+                        && $reservation->motif_refus
+                    )
+                        <div class="alert alert-danger mt-3 mb-0">
+                            <strong>Motif du refus :</strong><br>
+                            {{ $reservation->motif_refus }}
+                        </div>
+                    @endif
+
+                    <!-- ACTION -->
+                    @if($reservation->statut === \App\Models\Reservation::STATUT_EN_ATTENTE)
+                        <a href="{{ route('reservation.edit', $reservation) }}"
+                           class="btn btn-sm btn-outline-primary mt-3">
+                            <i class="bi bi-pencil-square"></i>
+                            Modifier la réservation
+                        </a>
+                    @endif
+
+                </div>
+            </div>
+
+        @empty
+            <p class="text-muted">
+                Vous n’avez encore effectué aucune réservation.
+            </p>
+        @endforelse
+
+    </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

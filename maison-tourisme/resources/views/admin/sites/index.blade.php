@@ -19,42 +19,33 @@
                 Maison du Tourisme
             </h1>
             <p class="text-xs text-amber-300 mt-1">
-                Commune des Lacs 1 · Administration
+                Maison du tourisme Aného · Administration
             </p>
         </div>
 
         <nav class="flex-1 px-4 py-4 space-y-2 text-sm">
 
             <a href="{{ route('admin.dashboard') }}"
-               class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-blue-800 hover:text-amber-300 transition">
-                <span>Tableau de bord</span>
+               class="flex items-center px-3 py-2 rounded-md hover:bg-blue-800 hover:text-amber-300 transition">
+                Tableau de bord
             </a>
 
             <a href="{{ route('admin.sites.index') }}"
-               class="flex items-center gap-2 px-3 py-2 rounded-md bg-amber-400 text-blue-900 font-semibold">
-                <span>Sites touristiques</span>
+               class="flex items-center px-3 py-2 rounded-md bg-amber-400 text-blue-900 font-semibold">
+                Sites touristiques
             </a>
 
-            <a href="#"
-               class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-blue-800 hover:text-amber-300 transition">
-                <span>Réservations</span>
+            <a href="{{ route('admin.visitors.index') }}"
+               class="flex items-center px-3 py-2 rounded-md hover:bg-blue-800 hover:text-amber-300 transition">
+                Visiteurs
             </a>
 
-            <a href="#"
-               class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-blue-800 hover:text-amber-300 transition">
-                <span>Visiteurs</span>
-            </a>
-
-            <a href="#"
-               class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-blue-800 hover:text-amber-300 transition">
-                <span>Paramètres</span>
-            </a>
         </nav>
 
         <div class="px-4 py-4 border-t border-blue-800 text-xs text-blue-200">
             Connecté en tant que<br>
             <span class="font-semibold text-white">
-                {{ auth()->user()->name ?? 'Admin' }}
+                {{ auth()->user()->name }}
             </span>
         </div>
     </aside>
@@ -69,13 +60,13 @@
                     Gestion des sites touristiques
                 </h2>
                 <p class="text-xs text-slate-500">
-                    Créez, publiez et organisez les sites visibles par les visiteurs.
+                    Créez, publiez et gérez les sites visibles par les visiteurs.
                 </p>
             </div>
 
             <div class="flex items-center gap-3">
                 <span class="text-sm text-slate-600">
-                    {{ auth()->user()->email ?? '' }}
+                    {{ auth()->user()->email }}
                 </span>
 
                 <form method="POST" action="{{ route('logout') }}">
@@ -92,14 +83,14 @@
         {{-- CONTENU --}}
         <section class="flex-1 p-6 space-y-4">
 
-            {{-- Message succès --}}
+            {{-- MESSAGE SUCCÈS --}}
             @if(session('success'))
                 <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm px-4 py-2 rounded-lg">
                     {{ session('success') }}
                 </div>
             @endif
 
-            {{-- Bandeau haut --}}
+            {{-- HEADER LISTE --}}
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
                 <div>
@@ -112,7 +103,7 @@
                     </p>
                     @if($sites->count())
                         <p class="text-xs text-slate-500 mt-1">
-                            Gérez le statut, les images et les informations de chaque site.
+                            Gérez le statut et le contenu de chaque site.
                         </p>
                     @endif
                 </div>
@@ -124,32 +115,22 @@
                 </a>
             </div>
 
-            {{-- État vide --}}
+            {{-- ÉTAT VIDE --}}
             @if(!$sites->count())
-                <div class="mt-4 bg-white rounded-xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
+                <div class="bg-white rounded-xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
                     <p>Aucun site touristique n’a encore été créé.</p>
                     <p class="mt-1">
-                        Commencez par ajouter un premier site pour qu’il apparaisse sur la page d’accueil.
+                        Ajoutez un premier site pour qu’il soit visible par les visiteurs.
                     </p>
-                    <div class="mt-4">
-                        <a href="{{ route('admin.sites.create') }}"
-                           class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold
-                                  bg-amber-400 text-blue-900 hover:bg-amber-500 shadow transition">
-                            + Créer mon premier site
-                        </a>
-                    </div>
                 </div>
             @else
                 {{-- TABLE --}}
                 <div class="bg-white shadow-sm rounded-xl overflow-hidden">
 
-                    <div class="px-4 py-3 border-b border-slate-200 flex items-center justify-between">
+                    <div class="px-4 py-3 border-b border-slate-200">
                         <h3 class="text-sm font-semibold text-blue-900">
                             Liste des sites touristiques
                         </h3>
-                        <span class="text-xs text-slate-500">
-                            Cliquez sur “Modifier” pour mettre à jour un site.
-                        </span>
                     </div>
 
                     <div class="overflow-x-auto">
@@ -160,9 +141,7 @@
                                     <th class="py-2 px-3 text-left">Site</th>
                                     <th class="py-2 px-3 text-left">Ville</th>
                                     <th class="py-2 px-3 text-left">Description</th>
-                                    <th class="py-2 px-3 text-left">Image</th>
                                     <th class="py-2 px-3 text-left">Statut</th>
-                                    <th class="py-2 px-3 text-left">Créé le</th>
                                     <th class="py-2 px-3 text-right">Actions</th>
                                 </tr>
                             </thead>
@@ -172,7 +151,7 @@
                                     <tr class="hover:bg-slate-50">
                                         <td class="py-2 px-3 text-slate-500">{{ $site->id }}</td>
 
-                                        <td class="py-2 px-3 font-medium text-slate-800">
+                                        <td class="py-2 px-3 font-medium">
                                             {{ $site->titre }}
                                         </td>
 
@@ -180,57 +159,27 @@
                                             {{ $site->ville }}
                                         </td>
 
-                                        <td class="py-2 px-3 text-slate-600 max-w-xs">
-                                            {{ \Illuminate\Support\Str::limit($site->description, 80) }}
-                                        </td>
-
-                                        <td class="py-2 px-3">
-                                            @if($site->image_url)
-                                                <img src="{{ asset('storage/' . $site->image_url) }}"
-                                                     class="w-20 h-12 object-cover rounded-md border border-slate-200">
-                                            @else
-                                                <span class="text-xs text-slate-400">Aucune</span>
-                                            @endif
+                                        <td class="py-2 px-3 text-slate-600">
+                                            {{ \Illuminate\Support\Str::limit($site->description, 70) }}
                                         </td>
 
                                         <td class="py-2 px-3">
                                             @if($site->is_publishing)
-                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs
-                                                             bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                                <span class="px-2 py-0.5 text-xs rounded-full bg-emerald-100 text-emerald-700">
                                                     Publié
                                                 </span>
                                             @else
-                                                <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs
-                                                             bg-rose-50 text-rose-700 border border-rose-200">
+                                                <span class="px-2 py-0.5 text-xs rounded-full bg-rose-100 text-rose-700">
                                                     Masqué
                                                 </span>
                                             @endif
                                         </td>
 
-                                        <td class="py-2 px-3 text-slate-600">
-                                            {{ $site->created_at?->format('d/m/Y') }}
-                                        </td>
-
                                         <td class="py-2 px-3 text-right">
-                                            <div class="inline-flex gap-2">
-                                                <a href="{{ route('admin.sites.edit', $site) }}"
-                                                   class="px-3 py-1 rounded-full text-xs
-                                                          bg-blue-50 text-blue-900 hover:bg-blue-100 transition">
-                                                    Modifier
-                                                </a>
-
-                                                <form method="POST"
-                                                      action="{{ route('admin.sites.destroy', $site) }}"
-                                                      onsubmit="return confirm('Supprimer ce site ?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                            class="px-3 py-1 rounded-full text-xs
-                                                                   bg-rose-100 text-rose-700 hover:bg-rose-200 transition">
-                                                        Supprimer
-                                                    </button>
-                                                </form>
-                                            </div>
+                                            <a href="{{ route('admin.sites.edit', $site) }}"
+                                               class="px-3 py-1 text-xs rounded bg-blue-50 text-blue-900 hover:bg-blue-100">
+                                                Modifier
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach

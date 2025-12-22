@@ -23,15 +23,18 @@
 
         <!-- Navigation -->
         <div class="hidden md:flex gap-10 text-sm font-semibold">
-            <a href="#apropos" class="text-white hover:text-yellow-300 transition">
-                À propos
-            </a>
-            <a href="#contact" class="text-white hover:text-yellow-300 transition">
-                Contact
-            </a>
-            <a href="#discussion" class="text-white hover:text-yellow-300 transition">
-                Discussion
-            </a>
+           <a href="{{ route('apropos') }}" class="text-white hover:text-yellow-300 transition">
+    À propos
+</a>
+
+            <a href="{{ route('contact') }}" class="text-white hover:text-yellow-300 transition">
+    Contact
+</a>
+
+           <a href="{{ route('discussion') }}" class="text-white hover:text-yellow-300 transition">
+    Discussion
+</a>
+
         </div>
 
         <!-- Auth -->
@@ -74,11 +77,16 @@
             Explorer les sites touristiques
         </h1>
 
-        <input
-            type="text"
-            placeholder="Rechercher un site, une ville..."
-            class="w-full sm:w-80 rounded-xl border border-slate-300 px-4 py-2 text-sm focus:ring-4 focus:ring-yellow-200 focus:border-yellow-400 outline-none"
-        >
+       <form method="GET" action="{{ route('accueil') }}" class="w-full sm:w-80">
+    <input
+        type="text"
+        name="q"
+        value="{{ request('q') }}"
+        placeholder="Rechercher un site, une ville..."
+        class="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm focus:ring-4 focus:ring-yellow-200 focus:border-yellow-400 outline-none"
+    >
+</form>
+
     </div>
 
     <!-- LISTE DES SITES FULL WIDTH -->
